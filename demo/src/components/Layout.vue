@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <el-container>
         <app-aside></app-aside>
         <app-main></app-main>
@@ -18,7 +18,6 @@ export default {
   // 组件状态值
   data() {
     return {
-      list: []
     };
   },
   // 计算属性
@@ -77,16 +76,13 @@ export default {
 </script> 
 
 <style scoped>
-.el-col-12 {
-  width: 100%;
+.wrapper {
   height: 100%;
-  text-align: left;
 }
-.el-aside {
-  background: #373d41;
-  min-height: 730px;
+.el-container {
+  min-height: 100%;
 }
-.el-menu {
-  border: none;
+.el-main {
+  padding: 0;
 }
 </style>

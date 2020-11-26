@@ -6,9 +6,9 @@
         <el-input v-model="search.name"></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="search.status" placeholder="请选择">
-          <el-option label="禁用" value="禁用"></el-option>
-          <el-option label="正常" value="正常"></el-option>
+        <el-select v-model="search.status" filterable clearable>
+          <el-option label="禁用"  value="1"></el-option>
+          <el-option label="正常" value="2"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -42,12 +42,14 @@
         <el-form-item label="分类名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio v-model="form.status" label="1">正常</el-radio>
-          <el-radio v-model="form.status" label="2">禁用</el-radio>
+        <el-form-item label="状态">
+          <el-radio-group v-model="form.status">
+            <el-radio :label="1">正常</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="form.sort" :min="1" :max="10"></el-input-number>
+          <el-input-number v-model="form.sort" :min="1" :max="100"></el-input-number>
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remark"></el-input>
@@ -96,7 +98,9 @@ export default {
         total: 0
       },
       dialogFormVisible: false,
-      form: {},
+      form: {
+
+      },
 
       rules: {
         name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
@@ -139,6 +143,7 @@ export default {
         this.$message.success(res.message);
         this.list();
         this.dialogFormVisible = false;
+        this.form = {}
       } else {
         this.$message.error("修改失败");
       }
@@ -244,4 +249,11 @@ export default {
 </script> 
 
 <style scoped>
+.app-container {
+  padding: 20px;
+}
+.el-dialog,
+.el-form {
+  z-index: 99;
+}
 </style>

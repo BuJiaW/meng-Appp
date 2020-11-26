@@ -4,11 +4,7 @@
       <el-button type="danger" size="mini">-</el-button>
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          <a href="/">活动管理</a>
-        </el-breadcrumb-item>
-        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+        <el-breadcrumb-item :to="$route.path" v-for="(item,index) in $route.meta.name">{{item}}</el-breadcrumb-item>
       </el-breadcrumb>
 
       <el-dropdown>
@@ -26,7 +22,9 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <router-view></router-view>
+    <div class="view">
+      <router-view></router-view>
+    </div>
   </el-main>
 </template>
 
@@ -95,30 +93,36 @@ export default {
 </script> 
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
+.el-main {
+  margin-left: 210px;
 }
 .box {
-  position: relative;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 3px solid #ddd;
+  position: fixed;
+  left: 210px;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  padding: 0 20px;
+  align-items: center;
+  box-shadow: 1px 2px 4px #000;
   margin-bottom: 10px;
+  background: #fff;
+  z-index: 9;
 }
 button {
   float: left;
   margin-right: 16px;
 }
-.el-breadcrumb {
-  line-height: 30px;
-  float: left;
-}
 .el-dropdown {
-  float: right;
+  position: fixed;
+  right: 20px;
 }
 img {
   width: 30px;
   height: 30px;
+}
+.view {
+  padding-top: 82px;
 }
 </style>

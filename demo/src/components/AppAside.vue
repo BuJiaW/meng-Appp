@@ -1,55 +1,54 @@
 <template>
-  <el-aside width="200px" id="aside">
-    <el-col :span="12">
-      <el-menu
-        default-active="2"
-        class="el-menu-vertical-demo"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
-        router
-      >
-        <el-menu-item index="/dashboard">
-          <i class="el-icon-menu"></i>
-          <span slot="title">首页</span>
-        </el-menu-item>
+  <el-aside>
+    <el-menu
+      :default-active="$route.path"
+      class="el-menu-vertical-demo"
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+      router
+      :collapse="isCollapse"
+    >
+      <el-menu-item index="/dashboard">
+        <i class="el-icon-menu"></i>
+        <span slot="title">首页</span>
+      </el-menu-item>
 
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>博客管理</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="/blog/article">文章管理</el-menu-item>
-            <el-menu-item index="/blog/category">分类管理</el-menu-item>
-            <el-menu-item index="/blog/label">标签管理</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>博客管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/blog/article">文章管理</el-menu-item>
+          <el-menu-item index="/blog/category">分类管理</el-menu-item>
+          <el-menu-item index="/blog/label">标签管理</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
 
-        <el-menu-item index="/advert">
-          <i class="el-icon-document"></i>
-          <span slot="title">广告管理</span>
-        </el-menu-item>
+      <el-menu-item index="/advert/index">
+        <i class="el-icon-document"></i>
+        <span slot="title">广告管理</span>
+      </el-menu-item>
 
-        <!--  -->
-        <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>系统管理</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="/system/user">用户管理</el-menu-item>
-            <el-menu-item index="/system/role">角色管理</el-menu-item>
-            <el-menu-item index="/system/menu">菜单管理</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
+      <!--  -->
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>系统管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/system/user">用户管理</el-menu-item>
+          <el-menu-item index="/system/role">角色管理</el-menu-item>
+          <el-menu-item index="/system/menu">菜单管理</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
 
-        <el-menu-item index="/external-link">
-          <i class="el-icon-menu"></i>
-          <span slot="title">梦学谷官网</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
+      <el-menu-item index="/external-link">
+        <i class="el-icon-menu"></i>
+        <span slot="title">梦学谷官网</span>
+      </el-menu-item>
+    </el-menu>
   </el-aside>
 </template>
 
@@ -61,7 +60,9 @@ export default {
   components: {},
   // 组件状态值
   data() {
-    return {};
+    return {
+      isCollapse: false,                                                                                                         
+    };
   },
   // 计算属性
   computed: {},
@@ -118,16 +119,16 @@ export default {
 </script> 
 
 <style scoped>
-.el-col-12 {
-  width: 100%;
-  height: 100%;
-  text-align: left;
-}
 .el-aside {
+  width: auto !important;
+  height: 100% !important;
   background: #373d41;
-  min-height: 730px;
+  color: #333;
+  position: fixed;
+  z-index: 9;
 }
 .el-menu {
+  width: 210px;
   border: none;
 }
 </style>

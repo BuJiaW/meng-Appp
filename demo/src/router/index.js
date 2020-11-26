@@ -11,11 +11,12 @@ const routes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    meta: { title: '首页', icon: 'dashboard', affix: true }, //固钉
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-    }]
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+      }
+    ]
   },
 
   // 博客管理
@@ -23,26 +24,31 @@ const routes = [
     path: '/blog',
     component: Layout,
     redirect: '/blog',
-    name: 'Blog',
-    meta: { title: '博客管理', icon: 'el-icon-notebook-2' },
+    
     children: [
       {
         path: 'article',
         name: 'Article',
         component: () => import('@/views/article/index'),
-        meta: { title: '文章管理', icon: 'el-icon-notebook-1' }
+        meta:{
+          name:['博客管理','文章管理']
+        }
       },
       {
         path: 'category',
         name: 'Category',
         component: () => import('@/views/category/index'),
-        meta: { title: '分类管理', icon: 'el-icon-s-order' }
+        meta:{
+          name:['博客管理','分类管理']
+        }
       },
       {
         path: 'label',
         name: 'Label',
         component: () => import('@/views/label/index'),
-        meta: { title: '标签管理', icon: 'el-icon-collection-tag' }
+        meta:{
+          name:['博客管理','标签管理']
+        }
       },
     ]
   },
@@ -51,12 +57,14 @@ const routes = [
   {
     path: '/advert',
     component: Layout,
-    meta: { title: '广告管理', icon: 'el-icon-picture-outline-round' },
     children: [
       {
         path: 'index',
         name: 'Advert',
         component: () => import('@/views/advert/index'),
+        meta:{
+          name:['广告管理']
+        }
       }
     ]
   },
@@ -67,40 +75,31 @@ const routes = [
     component: Layout,
     redirect: '/system/user',
     name: 'System',
-    meta: {
-      title: '系统管理',
-      icon: 'el-icon-setting'
-    },
     children: [
       {
         path: 'user',
         component: () => import('@/views/user/index'), // Parent router-view
         name: 'User',
-        meta: { title: '用户管理', icon: 'el-icon-user-solid' },
+        meta:{
+          name:['系统管理','用户管理']
+        }
       },
       {
         path: 'role',
         component: () => import('@/views/role/index'),
         name: 'Role',
-        meta: { title: '角色管理', icon: 'el-icon-coin' }
+        meta:{
+          name:['系统管理','角色管理']
+        }
       },
       {
         path: 'menu',
         component: () => import('@/views/menu/index'),
         name: 'Menu',
-        meta: { title: '菜单管理', icon: 'el-icon-menu' }
+        meta:{
+          name:['系统管理','菜单管理']
+        }
       },
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'Al后台官网', icon: 'link' }
-      }
     ]
   },
 

@@ -6,7 +6,7 @@
         <el-input v-model="search.name"></el-input>
       </el-form-item>
       <el-form-item label="分类">
-        <el-select v-model="search.css" placeholder="请选择">
+        <el-select v-model="search.css" placeholder="请选择" filterable clearable>
           <el-option v-for="(it,ind) in search" :key="ind" :label="it.name" :value="it.name"></el-option>
         </el-select>
       </el-form-item>
@@ -36,7 +36,7 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="分类名称">
-          <el-select  placeholder="请选择活动区域" v-model="form.class">
+          <el-select placeholder="武磊" v-model="form.class" filterable clearable>
             <el-option v-for="(it,ind) in form.newForm" :key="ind" :label="it.name" :value="it.name"></el-option>
           </el-select>
         </el-form-item>
@@ -234,4 +234,7 @@ export default {
 </script> 
 
 <style scoped>
+.app-container {
+  padding: 20px;
+}
 </style>
