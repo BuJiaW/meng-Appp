@@ -235,6 +235,6 @@ export default {
 
 <style scoped>
 .app-container {
-  padding: 20px;
+  padding:0 20px;
 }
 </style>

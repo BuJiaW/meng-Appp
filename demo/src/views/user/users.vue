@@ -1,18 +1,17 @@
 <template>
-  <div class="app-container">
+  <el-dialog title="设置角色" :visible.sync="visible" :before-close="handleClose" width="60%">
     <!-- 搜索 -->
     <el-form :inline="true" class="demo-form-inline" :model="search">
       <el-form-item label="角色名称:" size="mini">
         <el-input v-model="search.title"></el-input>
       </el-form-item>
       <el-form-item size="mini">
-        <el-button type="primary" @click="find" icon="el-icon-search">查询</el-button>
+        <el-button type="primary" @click="findOne" icon="el-icon-search">查询</el-button>
         <el-button @click="search={}">重置</el-button>
-        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="open">新增</el-button>
+        <el-button type="success" icon="el-icon-circle-plus-outline" @click="userShow">设置角色</el-button>
       </el-form-item>
     </el-form>
-
-    <!-- 渲染表格 -->
+    <!-- table表格 -->
     <el-table
       ref="multipleTable"
       :data="tableData"
@@ -21,59 +20,49 @@
       border
       @selection-change="handleSelectionChange"
     >
-      >
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column type="index" align="center" label="序号" width="180"></el-table-column>
-      <el-table-column prop="name" align="center" label="角色名称"></el-table-column>
-      <el-table-column prop="remark" align="center" label="备注"></el-table-column>
-      <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button type="success" size="mini">分配权限</el-button>
-          <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column align="center" type="selection" width="60"></el-table-column>
+      <el-table-column align="center" type="index" label="序号" width="100"></el-table-column>
+      <el-table-column align="center" prop="name" label="角色名称"></el-table-column>
+      <el-table-column align="center" prop="remark" label="备注"></el-table-column>
     </el-table>
 
-    <!-- 分页器 -->
+    <!-- 分页 -->
     <el-pagination
-      @size-change="changeSize"
-      @current-change="changePage"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
       :current-page="page.current"
-      :page-sizes="[10, 20, 30]"
+      :page-sizes="[20, 40, 60]"
       :page-size="page.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="page.total"
     ></el-pagination>
-
-    <edit :visible="edit.visible" :title="edit.title" :formData="edit.formData" :close="close" />
-  </div>
+  </el-dialog>
 </template>
 
 <script>
-import edit from './roles'
-import { roleList, deleteList,updateList } from "../../api/role";
+import { getList,setUser } from "../../api/user";
 export default {
   // 组件参数 接收来自父组件的数据
-  props: [],
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    close: Function,
+    formData: Object
+  },
   // 局部注册的组件
-  components: {edit},
+  components: {},
   // 组件状态值
   data() {
     return {
-      search: {},
       tableData: [],
+      search: {}, //搜索
       page: {
         total: 0,
         current: 1,
         size: 20
-      },
-      edit:{
-          visible:false,
-          title:"",
-          formData:{}
-      },
-      multipleSelection: []
+      }
     };
   },
   // 计算属性
@@ -82,65 +71,48 @@ export default {
   watch: {},
   // 组件方法
   methods: {
-    //   渲染列表
-    async getList() {
-      let res = await roleList(this.search, this.page);
-      console.log(res);
+    //   关闭弹窗
+    handleClose() {
+      this.close();
+    },
+    // 渲染列表
+    async list() {
+      let res = await getList(this.search, this.page);
       this.tableData = res.data.records;
-      this.page.total = res.data.total;
-    },
-    //   查询
-    find() {
-      this.getList();
-      this.$message.success("查询成功");
-    },
-    //   添加
-    addRole() {},
-    // 编辑
-    async handleEdit(id) {
-        this.edit.visible = true
-        this.edit.title = '编辑'
-        let res = await updateList(id)
-        this.edit.formData = res.data
-    },
-    // 新增
-    open(){
-        this.edit.title = '新增'
-        this.edit.visible = true
-    },
-    // 关闭弹窗
-    close(){
-        this.edit.visible = false
-        this.getList()
-    },
-
-    // 删除
-    handleDelete(id) {
-      this.$confirm("你确定要删除吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(async () => {
-        let result = await deleteList(id);
-        if (result.code == 20000) {
-          this.$message.success("删除成功");
-          this.getList();
-        } else {
-          this.$message.error("删除失败");
-        }
-      });
-    },
-    // 分页
-    changeSize(val) {
-      this.page.size = val;
-      this.getList();
-    },
-    changePage(val) {
-      this.page.current = val;
-      this.getList();
+      this.page.total = res.data.total
+      console.log(res);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    // 设置角色
+    async userShow(id) {
+        let res = await setUser(id)
+        console.log(res)
+        if(res.code == 20000){
+            this.$message.success('设置角色成功')
+            this.list()
+            this.close()
+        }else{
+            this.$message.error('错误')
+        }
+    },
+    // 查询
+    findOne() {},
+    // 分页
+    //分页
+    handleSizeChange(val) {
+      this.page.size = val;
+      this.list();
+    },
+    handleCurrentChange(val) {
+      this.page.current = val;
+      this.list();
+    },
+    // 搜索
+    findOne(){
+        this.list()
+        this.$message.success('搜索成功')
     }
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
@@ -161,7 +133,7 @@ export default {
    * 如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$ el 也在文档内。
    */
   mounted() {
-    this.getList();
+    this.list();
   },
   /**
    * 数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。
@@ -194,7 +166,4 @@ export default {
 </script> 
 
 <style scoped>
-.app-container {
-  padding:0 20px;
-}
 </style>

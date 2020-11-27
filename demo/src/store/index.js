@@ -5,8 +5,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    asideFlag:false
   },
   mutations: {
+    changeAsideFlag(state,data){
+      state.asideFlag = data;
+    }
   },
   actions: {
   },

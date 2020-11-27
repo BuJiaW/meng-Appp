@@ -7,6 +7,7 @@ import './plugins/wyz-echarts/wyz-echarts.js'
 
 import axios from './utils/request'
 Vue.prototype.$axios = axios
+Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 

@@ -35,7 +35,11 @@
           <el-tag :type="scope.row.status|filterStatus">{{ scope.row.status|filterSize }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="updateDate" align="center" label="最后更新时间"></el-table-column>
+      <el-table-column  align="center" label="最后更新时间" min-width="120">
+        <template slot-scope="scope">
+          {{ getFormat(scope.row.updateDate) }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button
@@ -100,6 +104,9 @@
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 
+// 格式化时间
+import {format} from '@/utils/date'
+
 import {
   articleList,
   deleteArticle,
@@ -158,6 +165,10 @@ export default {
     async getList() {
       let res = await articleList(this.search, this.page);
       this.tableData = res.data.records;
+    },
+    // 格式化时间
+    getFormat(date){
+      return format(date)
     },
     // 删除
     async handleDelete(id) {
@@ -285,6 +296,6 @@ export default {
 
 <style scoped>
 .app-container {
-  padding: 20px;
+  padding:0 20px;
 }
 </style>

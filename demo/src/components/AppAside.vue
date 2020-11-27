@@ -1,5 +1,5 @@
 <template>
-  <el-aside>
+  <el-aside id="aside">
     <el-menu
       :default-active="$route.path"
       class="el-menu-vertical-demo"
@@ -7,8 +7,13 @@
       text-color="#fff"
       active-text-color="#ffd04b"
       router
-      :collapse="isCollapse"
+      :collapse="$store.state.asideFlag"
     >
+      <el-menu-item class="titles">
+        <img src="http://localhost:9528/static/img/logo-new.7156be27.png" alt="">
+        <span slot="title" class="titles">梦学谷博客权限管理系统</span>
+      </el-menu-item>
+
       <el-menu-item index="/dashboard">
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
@@ -61,7 +66,7 @@ export default {
   // 组件状态值
   data() {
     return {
-      isCollapse: false,                                                                                                         
+      
     };
   },
   // 计算属性
@@ -130,5 +135,13 @@ export default {
 .el-menu {
   width: 210px;
   border: none;
+}
+.titles>span  {
+  font-size: 13px !important;
+}
+img {
+  width: 30px;
+  height: 30px;
+  margin-right: 6px;
 }
 </style>

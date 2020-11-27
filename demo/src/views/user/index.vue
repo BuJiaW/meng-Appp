@@ -53,8 +53,8 @@
         <template slot-scope="scope" v-if="scope.row.isEnabled == 1">
           <el-button type="success" size="mini" @click="editUser(scope.row.id)">编辑</el-button>
           <el-button type="danger" size="mini" @click="delUser">删除</el-button>
-          <el-button type="primary" size="mini">设置角色</el-button>
-          <el-button type="primary" size="mini">密码修改</el-button>
+          <el-button type="primary" @click="open" size="mini">设置角色</el-button>
+          <el-button type="primary" @click="dialogFormVisible=true" size="mini">密码修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,70 +72,139 @@
 
     <!-- 编辑 -->
     <el-dialog :title="form.id?'编辑':'新增'" :visible.sync="userShow" width="400px">
-  <el-form :model="form">
-    <el-form-item label="用户名:" label-width="80px">
-      <el-input v-model="form.username" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="昵称:"  label-width="80px">
-      <el-input v-model="form.nickName" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="手机号:" label-width="80px">
-      <el-input v-model="form.mobile" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="邮箱:" label-width="80px">
-      <el-input v-model="form.email" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="账号过期:" label-width="80px">
-          <el-radio-group  size="medium"  v-model="form.isAccountNonExpired">
-          <el-radio border :label="0" >已过期</el-radio>
-          <el-radio border :label="1">未过期</el-radio>
-        </el-radio-group>
+      <el-form :model="form">
+        <el-form-item label="用户名:" label-width="80px">
+          <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码过期:" label-width="80px" >
-          <el-radio-group  size="medium" v-model="form.isCredentialsNonExpired">
-          <el-radio border :label="0">已过期</el-radio>
-          <el-radio border :label="1">未过期</el-radio>
-        </el-radio-group>
+        <el-form-item label="昵称:" label-width="80px">
+          <el-input v-model="form.nickName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="账号锁定:" label-width="80px" >
-          <el-radio-group  size="medium"  v-model="form.isAccountNonLocked">
-          <el-radio border :label="0">已过期</el-radio>
-          <el-radio border :label="1">未过期</el-radio>
-        </el-radio-group>
+        <el-form-item label="手机号:" label-width="80px">
+          <el-input v-model="form.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱:" label-width="80px">
+          <el-input v-model="form.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="账号过期:" label-width="80px">
+          <el-radio-group size="medium" v-model="form.isAccountNonExpired">
+            <el-radio border :label="0">已过期</el-radio>
+            <el-radio border :label="1">未过期</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="密码过期:" label-width="80px">
+          <el-radio-group size="medium" v-model="form.isCredentialsNonExpired">
+            <el-radio border :label="0">已过期</el-radio>
+            <el-radio border :label="1">未过期</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="账号锁定:" label-width="80px">
+          <el-radio-group size="medium" v-model="form.isAccountNonLocked">
+            <el-radio border :label="0">已过期</el-radio>
+            <el-radio border :label="1">未过期</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item>
-    <el-button @click="userShow = false">取 消</el-button>
-    <el-button type="primary" @click="form.id?userList():userAdd()">确 定</el-button>  
+          <el-button @click="userShow = false">取 消</el-button>
+          <el-button type="primary" @click="form.id?userList():userAdd()">确 定</el-button>
         </el-form-item>
-  </el-form>
-</el-dialog>
+      </el-form>
+    </el-dialog>
+
+    <!-- 修改密码 -->
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%">
+      <el-form
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="密码:" prop="pass">
+          <el-input type="password" v-model="ruleForm.pass" style="width:240px"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码:" prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" style="width:240px"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+          <el-button size="mini" type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <!-- 子组件 设置角色 -->
+    <users :visible="edit.visible" :close="close" />
   </div>
 </template>
 
 <script>
-import { getUserList, deleteUser , editUser, editUserList , UserAdd } from "@/api/user";
+import users from './users'
+import {
+  getUserList,
+  deleteUser,
+  editUser,
+  editUserList,
+  UserAdd,
+  Password
+} from "@/api/user";
 export default {
   // 组件名称
   name: "demo",
   // 组件参数 接收来自父组件的数据
   props: [],
   // 局部注册的组件
-  components: {},
+  components: {users},
   // 组件状态值
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.ruleForm.checkPass !== "") {
+          this.$refs.ruleForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       search: {},
       userData: [],
       page: {
         current: 1,
         size: 20,
-        total: 0,
+        total: 0
       },
       //显示框
-      userShow:false,
+      userShow: false,
       //
-      form:{}
+      form: {},
 
+      // --------------------修改密码
+      dialogFormVisible: false,
+      ruleForm: {
+        pass: "",
+        checkPass: ""
+      },
+      rules: {
+        pass: [{ validator: validatePass, trigger: "blur" }],
+        checkPass: [{ validator: validatePass2, trigger: "blur" }]
+      },
+
+      // 封装组件
+      edit:{
+        visible:false,
+        formData:{}
+      }
     };
   },
   // 计算属性
@@ -146,7 +215,6 @@ export default {
   methods: {
     async getUserDate() {
       let res = await getUserList(this.search);
-      console.log(res);
       this.userData = res.data.records;
       this.total = res.data.total;
     },
@@ -168,7 +236,7 @@ export default {
       this.$confirm("确认删除此条信息?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(async () => {
           let res = await deleteUser(id);
@@ -183,42 +251,67 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消删除"
           });
         });
     },
 
     //编辑
-    async editUser(id){
+    async editUser(id) {
       this.userShow = true;
       //用id获取当前行的内容
-      let res = await editUser(id)
-      console.log(res)
+      let res = await editUser(id);
+      console.log(res);
       //将获取的当前行的内容放入弹框中
-      this.form = res.data
+      this.form = res.data;
     },
-    async userList(){
+    async userList() {
       let res = await editUserList();
-      console.log(res)
-      if(res.code == 20000){
-        this.$message.success("修改成功")
+      console.log(res);
+      if (res.code == 20000) {
+        this.$message.success("修改成功");
         this.getUserDate();
-        this.userShow = false
-        this.form = {}
-      }else{
-        this.$message.error('修改失败')
+        this.userShow = false;
+        this.form = {};
+      } else {
+        this.$message.error("修改失败");
       }
     },
     //添加
-    async userAdd(){
+    async userAdd() {
       let res = await UserAdd();
-      console.log(res)
-      if(res.code == 20000){
-        this.$message.success("新增成功")
-        this.userShow = false
-      }else{
-        this.$message.error("新增失败")
+      console.log(res);
+      if (res.code == 20000) {
+        this.$message.success("新增成功");
+        this.userShow = false;
+      } else {
+        this.$message.error("新增失败");
       }
+    },
+    // 修改密码
+    submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          let res = await Password(this.ruleForm);
+          if(res.code == 20000){
+            this.$message.success(res.message)
+            this.dialogFormVisible = false
+            this.getUserDate()
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    
+    // 分组件打开弹窗
+    open(){
+      this.edit.visible = true
+    },
+    // 关闭
+    close(){
+      this.edit.visible = false
+      this.getUserDate()
     }
   },
   //过滤器
@@ -242,7 +335,7 @@ export default {
     filterEnabled(status) {
       let type = { 1: "success", 0: "danger" };
       return type[status];
-    },
+    }
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
   /**
@@ -290,12 +383,12 @@ export default {
    * Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，
    * 所有的事件监听器会被移除，所有的子实例也会被销毁。
    */
-  destroyed() {},
+  destroyed() {}
 };
 </script> 
 <style scoped>
 .app-container {
-    padding:20px;
+  padding:0 20px;
 }
 </style>
 

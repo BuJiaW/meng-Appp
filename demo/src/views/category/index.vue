@@ -154,6 +154,7 @@ export default {
         if (valid) {
           this.dialogFormVisible = true;
           let res = await addList(this.form);
+          console.log(res)
           if (res.code == 20000) {
             this.$message.success(res.message);
             this.dialogFormVisible = false;
@@ -250,7 +251,7 @@ export default {
 
 <style scoped>
 .app-container {
-  padding: 20px;
+  padding:0 20px;
 }
 .el-dialog,
 .el-form {

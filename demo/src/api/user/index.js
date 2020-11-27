@@ -44,3 +44,32 @@ export function UserAdd() {
         method: "POST"
     })
 }
+
+// 修改密码
+export function Password(data) {
+    return Server({
+        url: "/system/user/password",
+        method: "PUT",
+        ...data
+    })
+}
+
+// 设置权限
+// 列表
+export function getList(query,current, size){
+    return Server({
+        url:'/system/role/search',
+        method:'POST',
+        data:{
+            ...query,
+            current, size
+        }
+    })
+}
+// 设置角色
+export function setUser(id){
+    return Server({
+        url:`/system/user/${id}/role/save`,
+        method:'POST',
+    })
+}

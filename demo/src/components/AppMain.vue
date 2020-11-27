@@ -1,10 +1,10 @@
 <template>
   <el-main>
     <div class="box">
-      <el-button type="danger" size="mini">-</el-button>
+      <el-button type="danger" size="mini" @click="king">-</el-button>
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="$route.path" v-for="(item,index) in $route.meta.name">{{item}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="$route.path" v-for="(item,index) in $route.meta.name" :key="index">{{item}}</el-breadcrumb-item>
       </el-breadcrumb>
 
       <el-dropdown>
@@ -36,14 +36,23 @@ export default {
   components: {},
   // 组件状态值
   data() {
-    return {};
+    return {
+      flag:true
+    };
   },
   // 计算属性
   computed: {},
   // 侦听器
   watch: {},
   // 组件方法
-  methods: {},
+  methods: {
+
+    king(){
+      this.flag = !this.flag;
+      this.$store.commit('changeAsideFlag',this.flag) 
+
+    }
+  },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
   /**
    * 在实例初始化之后，组件属性计算之前，如data属性等

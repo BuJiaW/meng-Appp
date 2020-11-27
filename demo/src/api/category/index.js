@@ -32,9 +32,10 @@ export function editCategory(data){
     })
 }
 // 添加
-export function addList(){
+export function addList(data){
     return Server({
-        url:'/article/category',
+        url:`/article/category`,
         method:'post',
+        data
     })
 }
