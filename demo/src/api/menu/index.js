@@ -12,7 +12,7 @@ export function getMenu(){
 export function delteMenu(id){
     return request ({
         url:`/system/menu/${id}`,
-        method:"POST"
+        method:"delete"
     })
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-      首页
+      这里是首页，没有数据
   </div>
 </template>
 

@@ -37,48 +37,50 @@
       </el-table-column>
       <el-table-column prop="sort" label="排序" align="center"></el-table-column>
       <el-table-column label="操作" width="250px" align="center">
-        <el-button type="primary" size="mini" @click="addMenuRit" >新增</el-button>
-        <el-button type="success" size="mini">编辑</el-button>
-        <el-button type="danger" size="mini" @click="delMenu(scope.row.id)">删除</el-button>
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="addMenuRit">新增</el-button>
+          <el-button type="success" size="mini">编辑</el-button>
+          <el-button type="danger" size="mini" @click="delMenu(scope.row.id)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <!-- 新增 -->
-    <el-dialog title="新增" :visible.sync="menuShow" width="500px"> 
-    <el-form :model="form">
-     <el-form-item label="类型" label-width="80px">
-    <el-radio-group v-model="form.type" >
-      <el-radio :label="1">目录</el-radio>
-      <el-radio :label="2">菜单</el-radio>
-      <el-radio :label="3" v-if="form.parentId !== 0">按钮</el-radio>
-    </el-radio-group>
-  </el-form-item>
-    <el-form-item label="名称" label-width="80px" prop="name">
-     <el-input v-model="form.name" autocomplete="off"></el-input>
-     </el-form-item>
-    <el-form-item label="权限标识" label-width="80px" prop="code">
-      <el-input v-model="form.code" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="请求地址" label-width="80px" prop="url" v-if="form.type !=3">
-      <el-input v-model="form.url" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="图标" label-width="80px" prop="icon" v-if="form.type !=3">
-      <el-input v-model="form.icon" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="排序" label-width="80px" prop="sort">
-    <el-input-number v-model="form.sort" :min="1" :max="10" ></el-input-number>
-    </el-form-item>
-     <el-form-item label="备注" label-width="80px" prop="remark">
-    <el-input type="textarea" v-model="form.remark" ></el-input>
-    </el-form-item>
-    <el-button size="mini">取 消</el-button>
-    <el-button type="primary" size="mini" @click="addMenuList ">确 定</el-button>
-  </el-form>
-</el-dialog>
+    <el-dialog title="新增" :visible.sync="menuShow" width="500px">
+      <el-form :model="form">
+        <el-form-item label="类型" label-width="80px">
+          <el-radio-group v-model="form.type">
+            <el-radio :label="1">目录</el-radio>
+            <el-radio :label="2">菜单</el-radio>
+            <el-radio :label="3" v-if="form.parentId !== 0">按钮</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="名称" label-width="80px" prop="name">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="权限标识" label-width="80px" prop="code">
+          <el-input v-model="form.code" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="请求地址" label-width="80px" prop="url" v-if="form.type !=3">
+          <el-input v-model="form.url" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="图标" label-width="80px" prop="icon" v-if="form.type !=3">
+          <el-input v-model="form.icon" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="排序" label-width="80px" prop="sort">
+          <el-input-number v-model="form.sort" :min="1" :max="10"></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注" label-width="80px" prop="remark">
+          <el-input type="textarea" v-model="form.remark"></el-input>
+        </el-form-item>
+        <el-button size="mini">取 消</el-button>
+        <el-button type="primary" size="mini" @click="addMenuList ">确 定</el-button>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMenu , delteMenu ,addMenu} from "../../api/menu";
+import { getMenu, delteMenu, addMenu } from "../../api/menu";
 export default {
   // 组件名称
   name: "demo",
@@ -89,10 +91,10 @@ export default {
   // 组件状态值
   data() {
     return {
-    menuData: [],
-    search: {},
-    menuShow:false,
-    form:{}
+      menuData: [],
+      search: {},
+      menuShow: false,
+      form: {}
     };
   },
   // 计算属性
@@ -112,34 +114,45 @@ export default {
       this.getMenuList();
     },
     //删除
-    async delMenu(id){
-        let res = await delteMenu();
-        console.log(res)
-    },
-    //头部新增   
-    async addMenuList(){
-        let res = await addMenu(this.form);
-        console.log(res)
-        if(res.code == 20000){
-            this.$message.success("新增成功")
-            this.menuShow = false;
-            this.getMenuList();
-        }else{
-            this.$message.error("新增失败")
+   delMenu(id) {
+       this.$confirm("你确定要删除吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(async () => {
+         let res = await delteMenu(id);
+        if (res.code == 20000) {
+          this.$message.success("删除成功");
+          this.getMenuList()
+        } else {
+          this.$message.error("删除失败");
         }
+      });
+     
+    
+      
+    },
+    //头部新增
+    async addMenuList() {
+      let res = await addMenu(this.form);
+      console.log(res);
+      if (res.code == 20000) {
+        this.$message.success("新增成功");
+        this.menuShow = false;
+        this.getMenuList();
+      } else {
+        this.$message.error("新增失败");
+      }
     },
     //右侧新增
-    async addMenuRit(){
-        this.menuShow = true
-        let res = await addMenu(this.form)
-        if(res.code == 20000){
-            this.menuShow = false
-            this.$message.success("新增成功")
-        }
-
+    async addMenuRit() {
+      this.menuShow = true;
+      let res = await addMenu(this.form);
+      if (res.code == 20000) {
+        this.menuShow = false;
+        this.$message.success("新增成功");
+      }
     }
-   
- 
   },
   // 以下是生命周期钩子 注：没用到的钩子请自行删除
   /**
@@ -187,7 +200,7 @@ export default {
    * Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定，
    * 所有的事件监听器会被移除，所有的子实例也会被销毁。
    */
-  destroyed() {},
+  destroyed() {}
 };
 </script> 
 <style scoped>

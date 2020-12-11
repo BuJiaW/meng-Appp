@@ -49,9 +49,9 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-menu-item index="/external-link">
+      <el-menu-item>
         <i class="el-icon-menu"></i>
-        <span slot="title">梦学谷官网</span>
+        <a href="https:www.baidu.com">梦学谷官网</a>
       </el-menu-item>
     </el-menu>
   </el-aside>
@@ -143,5 +143,9 @@ img {
   width: 30px;
   height: 30px;
   margin-right: 6px;
+}
+a {
+  text-decoration: none;
+  color: #fff;
 }
 </style>
